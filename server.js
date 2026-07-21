@@ -15,12 +15,13 @@ dotenv.config();
 const app = express();
 
 // 1. CORS ko frontend ke liye allow karo
-app.use(cors({
-  origin: "https://lms-frontend-r46x.vercel.app", // <-- tumhara frontend link
-  credentials: true
-}));
+
 
 app.use(express.json());
+app.use(cors({ 
+  origin: ["http://localhost:5173", "https://lms-frontend-r46x.vercel.app"], 
+  credentials: true 
+}));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/course", courseRoutes);
