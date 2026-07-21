@@ -14,14 +14,21 @@ dotenv.config();
 
 const app = express();
 
-// 1. CORS ko frontend ke liye allow karo
+// 1. CORS - Frontend ko allow karo
+const allowedOrigins = [
+  "http://localhost:5173", // local dev ke liye
+  "https://lms-frontend-gamma-ecru.vercel.app" // Vercel wala frontend
+];
 
+app.use(cors({ 
+  origin: allowedOrigins, 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 app.use(express.json());
-app.use(cors({ 
-  origin: ["http://localhost:5173", "https://lms-frontend-r46x.vercel.app"], 
-  credentials: true 
-}));
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/course", courseRoutes);
@@ -43,4 +50,9 @@ app.get("/", (req, res) => {
   res.send("LMS Backend is Running...");
 })
 
+// Vercel ke liye
 export default app;
+
+// Local ke liye agar chahiye to ye bhi laga sakte ho
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
