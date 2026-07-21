@@ -13,21 +13,26 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// 1. CORS ko frontend ke liye allow karo
+app.use(cors({
+  origin: "https://lms-frontend-r46x.vercel.app", // <-- tumhara frontend link
+  credentials: true
+}));
+
 app.use(express.json());
+
 app.use("/api/auth", authRoutes);
 app.use("/api/course", courseRoutes);
 app.use("/api/enrollment", enrollmentRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-
 mongoose
-  
-.connect(process.env.MONGO_URI, {
+  .connect(process.env.MONGO_URI, {
     serverSelectionTimeoutMS: 10000,
   })
   .then(() => console.log("MongoDB Connected Successfully"))
@@ -36,4 +41,5 @@ mongoose
 app.get("/", (req, res) => {
   res.send("LMS Backend is Running...");
 })
+
 export default app;
